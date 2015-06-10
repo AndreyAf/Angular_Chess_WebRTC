@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body ng-app="test" ng-controller="ChessCtrl">
+<div class="container">
+    <legend>Angular Chess Game</legend>
+    <div class="row" ng-show="gameState == 'new'">
+        <div class="col-md-4">
+            <label>Fisrt player:</label>
+            <input type="text" ng-model="first_player.name"/>
+            <label>second player:</label>
+            <input type="text" ng-model="second_player.name"/>
+            <button type="button" class="btn btn-success" ng-click="startGame()">PLAY!</button>
+        </div>
+    </div>
+    <div class="row" ng-show="gameState == 'start'">
+        <legend>{{first_player.name}} VS {{second_player.name}} => now turn of {{turn}}</legend>
+    </div>
+    <div class="row" ng-show="gameState == 'start'">
+        <div class="col-md-4">
+            <label>{{error}}</label>
+            <legend>
+                Total moves: {{movements.length}}
+            </legend>
+            <ul>
+                <li ng-repeat="move in movements">{{move.who.color}} {{move.who.name}} {{move.letter}}-{{move.index}}</li>
+            </ul>
+        </div>
+        <div class="col-md-8 board">
+            <div class="row">
+                <div ng-repeat="row in Aboard">
+                    <div class="tile" ng-repeat="tile in row"
+                         ng-class="{'tile-black': tile.color=='black', 'tile-white': tile.color=='white' , 'droppble-tile': tile.droppable}"
+                         data-drop="tile.droppable" data-jqyoui-options="{hoverClass: 'ui-drop-hover'}" ng-model="tile.figure" jqyoui-droppable="{animate:true,onDrop: 'onDrop(tile,$parent.$index,$index)',onOver: 'onOver(tile,$parent.$index,$index)',onOut: 'onOut(tile,$parent.$index,$index)'}">
+
+                        <div data-drag="tile.figure.color == turn" jqyoui-draggable="{animate:true,onStop: 'onStop(tile,$parent.$index,$index)',onStart: 'onStart(tile,$parent.$index,$index)',onDrag: 'onDrag(tile,$parent.$index,$index)'}"
+                             ng-model="tile.figure" ng-click="selectFigure(tile)">
+                            <img class="figure-img" ng-class="{'selected-figure' : currentFigure === tile.figure}" ng-src="img/{{tile.figure.name}}_{{tile.figure.color}}.png" ng-show="tile.figure != null"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script src="components/angular-dragdrop/angular-dragdrop.min.js"></script>
+<script src="js/app.js"></script>
+<script>
+
+    $( ".tile" ).width( $( ".board" ).width()/8);
+
+    $( ".tile" ).height( $( ".tile" ).width());
+
+    $( ".figure-img" ).width( $( ".tile" ).width()/1.5);
+</script>
+</body>
+</html>
